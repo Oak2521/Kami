@@ -22,10 +22,10 @@ jobs:
         run: python3 -m pip install Pygments
 
       - name: Lint templates and check token sync
-        run: python3 scripts/build.py --check
+        run: python3 skills/kami/scripts/build.py --check
 
-      - name: Run test suite
-        run: python3 scripts/tests/test_build.py
+      - name: Check generated Codex plugin metadata
+        run: python3 scripts/build_metadata.py --check
 
       - name: Build and audit skill package
         run: bash scripts/package-skill.sh /tmp/kami-ci.zip
@@ -55,31 +55,72 @@ jobs:
             fonts-noto-cjk fonts-noto-cjk-extra
 
       - name: Install Python deps
-        run: python3 -m pip install weasyprint pypdf Pygments
+        # pymupdf backs --check-fonts (it reads the text spans of a rendered PDF);
+        # without it that step exits 2 on a missing dependency rather than judging
+        # the fonts.
+        run: python3 -m pip install weasyprint pypdf pymupdf Pygments python-pptx
 
-      - name: Verify strict page-count targets
-        # Only the six hard-invariant templates (resume == 2, one-pager == 1
-        # across CN/EN/KO) run in CI. The KO pair also exercises the Korean
-        # render path on Linux (fonts-noto-cjk supplies the glyphs). The
-        # long-doc / portfolio / slides ceilings are soft and rely on the
-        # stabilizer; the next step exercises that path.
+      - name: Set up Node.js for strict mathematics
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: skills/kami/scripts/mathjax-runtime/package-lock.json
+
+      - name: Install locked MathJax runtime
+        run: bash skills/kami/scripts/ensure_mathjax.sh
+
+      - name: Install the skill the way users do
+        # The skills CLI copies the directory that owns SKILL.md. This guards
+        # the layout contract: a bare install must yield skills/kami alone,
+        # never the website or the fonts that share the repository.
+        run: |
+          export HOME="$(mktemp -d)"
+          npx --yes skills add "$GITHUB_WORKSPACE" -a claude-code codex cursor -g -y
+          installed="$HOME/.agents/skills/kami"
+          test -f "$installed/SKILL.md"
+          test -f "$installed/scripts/build.py"
+          test ! -e "$installed/index.html"
+          test ! -e "$installed/site"
+          test ! -e "$installed/assets/fonts/TsangerJinKai02-W04.ttf"
+          size_kb="$(du -sk "$installed" | cut -f1)"
+          test "$size_kb" -lt 6000
+          echo "OK: bare install is skills/kami only (${size_kb} KB)"
+
+      - name: Run full test suite with render dependencies
+        run: python3 scripts/tests/test_build.py
+
+      - name: Verify hard page-count targets and editable PPTX decks
+        # Every HTML template with a non-zero registry ceiling runs here, so a
+        # newly registered hard-page target joins CI automatically. The same
+        # job builds both editable PPTX fallbacks through their installed
+        # runtime dependency instead of only checking their source strings.
         # KAMI_ALLOW_FALLBACK_ONLY=1: CI does not ship commercial fonts
         # (TsangerJinKai02, Charter). Treat fallback-only embedding as a
         # warning instead of a failure so CI can still gate page counts.
         env:
           KAMI_ALLOW_FALLBACK_ONLY: '1'
         run: |
-          python3 scripts/build.py --verify one-pager
-          python3 scripts/build.py --verify one-pager-en
-          python3 scripts/build.py --verify one-pager-ko
-          python3 scripts/build.py --verify resume
-          python3 scripts/build.py --verify resume-en
-          python3 scripts/build.py --verify resume-ko
+          python3 - <<'PY'
+          import subprocess
+          import sys
 
-      - name: Stabilize end-to-end (smoke)
-        # Runs the solver across every stabilize_max > 0 target. Non-strict
-        # because CI uses Noto CJK fallback (not TsangerJinKai02) and Noto's
-        # different glyph widths can change page count by +/- 1, which the
-        # solver should handle but should not gate CI on. A solver crash
-        # still fails the build.
-        run: python3 scripts/stabilize.py all --report
+          sys.path.insert(0, "skills/kami/scripts")
+          from shared import HTML_TEMPLATES
+
+          for name, spec in HTML_TEMPLATES.items():
+              if spec.build_max_pages:
+                  subprocess.run(
+                      [sys.executable, "skills/kami/scripts/build.py", "--verify", name],
+                      check=True,
+                  )
+          PY
+          python3 skills/kami/scripts/build.py --verify slides
+          python3 skills/kami/scripts/build.py --verify slides-en
+
+      - name: Check which family actually drew the CJK text
+        # Page counts cannot see the typeface. With fonts-noto-cjk installed
+        # this reports a serif fallback and passes; it fails if the CJK body
+        # ever lands on a sans or gets split across two families, which is how
+        # a broken font install would otherwise ship looking merely "fine".
+        run: python3 skills/kami/scripts/build.py --check-fonts assets/examples/one-pager.pdf assets/examples/one-pager-ko.pdf assets/examples/resume.pdf
