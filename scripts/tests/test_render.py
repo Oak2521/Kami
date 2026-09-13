@@ -46,8 +46,10 @@ def test_font_recovery_repairs_truncated_repository_copies() -> None:
         target = root / "skills/kami/assets/fonts"
         source.mkdir(parents=True)
         target.mkdir(parents=True)
-        names = {"SourceHanSerifSC-Regular.otf": 10000000,
-                 "SourceHanSerifSC-Medium.otf": 10000000,
+        # Synthetic size-only fixtures meet the SC recovery threshold; they are
+        # not real fonts and are never used as rendering evidence.
+        names = {"SourceHanSerifSC-Regular.otf": 20000000,
+                 "SourceHanSerifSC-Medium.otf": 20000000,
                  "SourceHanSerifKR-Regular.otf": 6500000,
                  "SourceHanSerifKR-Medium.otf": 6500000}
         for name, size in names.items():
@@ -66,8 +68,11 @@ def test_font_recovery_repairs_truncated_repository_copies() -> None:
             stub = bin_dir / name
             stub.write_text("#!/bin/sh\nexit 99\n")
             stub.chmod(0o755)
-        result = subprocess.run(["bash", str(script)], capture_output=True, text=True,
-                                env={**os.environ, "PATH": f"{bin_dir}:{os.environ['PATH']}",
+        bash = os.environ.get("KAMI_TEST_BASH") or shutil.which("bash")
+        result = subprocess.run([bash, "-c",
+                                'export PATH="$(cygpath -u "$FONT_TEST_BIN" 2>/dev/null || printf "%s" "$FONT_TEST_BIN"):$PATH"; exec bash "$1"',
+                                "font-test", str(script)], capture_output=True, text=True,
+                                env={**os.environ, "FONT_TEST_BIN": str(bin_dir),
                                      "KAMI_FONT_DIR": str(root / "user-fonts")})
         check("font recovery repairs truncated copy without downloading",
               result.returncode == 0 and broken.stat().st_size == names[broken.name],
