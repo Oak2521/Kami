@@ -110,7 +110,7 @@ def test_mermaid_normalize_strips_unsafe_features() -> None:
     check("normalize removes var()", "var(" not in out, out)
     check("normalize removes google-fonts import", "googleapis" not in out, out)
     check("normalize drops the quoted single-family bug", "'Charter'" not in out, out)
-    check("normalize keeps the Kami CJK serif stack", "TsangerJinKai02" in out, out)
+    check("normalize keeps the Kami CJK serif stack", "Source Han Serif SC" in out, out)
     check("normalize resolves fill to a static hex", 'fill="#' in out, out)
     check("normalize re-themes accent to Kami ink-blue",
           "#1b365d" in out.lower(), out)

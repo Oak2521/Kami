@@ -10,7 +10,7 @@ One-page quick reference. Scan before filling a template or tweaking a detail. F
 4. One serif font per page (headings + body). `--sans` is a CSS alias for the same family; introduce a real sans only for genuinely UI-style chrome
 5. Serif weight locked at 500, no bold
 6. Line-height: headlines 1.1-1.3 / dense 1.4-1.45 / reading 1.5-1.55
-7. Letter-spacing: Chinese body with TsangerJinKai 0.1-0.2pt (dense layouts may push to 0.3pt); English body 0; small labels and all-caps overlines get +0.2-1pt
+7. Letter-spacing: Chinese body with Source Han Serif SC 0.1-0.2pt (dense layouts may push to 0.3pt); English body 0; small labels and all-caps overlines get +0.2-1pt
 8. Tag backgrounds solid hex, no rgba (WeasyPrint double-rectangle bug)
 9. No decorative ticks, short rules, or side accents; every line must encode separation, state, or relationship
 10. No italic in templates or demos
@@ -96,12 +96,12 @@ English:
 Chinese:
 
 ```css
---serif: "TsangerJinKai02", "Source Han Serif SC",
+--serif: "Source Han Serif SC",
          "Noto Serif CJK SC", "Songti SC", "STSong",
          Georgia, serif;
 --sans:  var(--serif);
 --mono:  "JetBrains Mono", "SF Mono", Consolas,
-         "TsangerJinKai02", "Source Han Serif SC",
+         "Source Han Serif SC",
          monospace;
 ```
 
@@ -110,7 +110,7 @@ Japanese:
 ```css
 --serif: "YuMincho", "Yu Mincho", "Hiragino Mincho ProN",
          "Noto Serif CJK JP", "Source Han Serif JP",
-         "TsangerJinKai02", Georgia, serif;
+         "Source Han Serif SC", Georgia, serif;
 --sans:  var(--serif);
 ```
 

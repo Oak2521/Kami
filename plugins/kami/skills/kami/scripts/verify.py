@@ -33,7 +33,7 @@ from shared import (
 )
 
 # Primary fonts expected in embedded PDF font names
-CN_PRIMARY_FONTS = {"TsangerJinKai02"}
+CN_PRIMARY_FONTS = {"Source Han Serif SC"}
 EN_PRIMARY_FONTS = {"Charter"}
 KO_PRIMARY_FONTS = {"Source-Han-Serif-K", "SourceHanSerifK"}
 
@@ -41,7 +41,7 @@ KO_PRIMARY_FONTS = {"Source-Han-Serif-K", "SourceHanSerifK"}
 # Falling through to one of these is a degradation, not a defect: the page still
 # carries the serif texture every size, tracking and leading value was tuned for.
 CJK_SERIF_MARKERS = (
-    "TsangerJinKai",
+    "Source Han Serif SC",
     "SourceHanSerif",
     "NotoSerifCJK",
     "NotoSerifSC",
@@ -68,7 +68,7 @@ RECOGNIZABLE_FALLBACK_FONT_MARKERS = (
     "Palatino",
     "PT-Serif",
     "PTSerif",
-    "TsangerJinKai",
+    "Source Han Serif SC",
     "YuMincho",
     "Hiragino",
     "SourceHan",
@@ -183,8 +183,8 @@ MIXED_FAMILY_MIN_SHARE = 0.05
 MIXED_FAMILY_MIN_CHARS = 3
 
 # Weight and style words a PDF appends to the family it subsets. Bold body text
-# is a second BaseFont entry off one family (TsangerJinKai02 plus
-# TsangerJinKai02-Medium), which the mixed-family rule must not read as two
+# is a second BaseFont entry off one family (Source Han Serif SC plus
+# Source Han Serif SC-Medium), which the mixed-family rule must not read as two
 # typefaces. Longest first so 'semibold' strips before 'bold'.
 # Two-letter abbreviations (Md, Rg, Bd) are deliberately absent: no font seen
 # here uses them, and they are short enough to bite a real family name.
@@ -195,7 +195,7 @@ _FONT_STYLE_SUFFIXES = (
 )
 
 
-# Numeric weight markers: TsangerJinKai ships W04/W05, other foundries use a
+# Numeric weight markers: Source Han Serif SC ships W04/W05, other foundries use a
 # three-digit CSS weight. Both name one family at two weights.
 _FONT_WEIGHT_CODE = re.compile(r"(?:w\d{2}|\d{3})$")
 
@@ -387,7 +387,7 @@ def verify_target(name: str, source: str, max_pages: int, src_dir: Path) -> list
         if not fallback_present:
             issues.append(f"no recognizable font embedded in {out.name}")
         elif os.environ.get("KAMI_ALLOW_FALLBACK_ONLY"):
-            # CI / headless boxes never have commercial fonts (TsangerJinKai02,
+            # CI / headless boxes never have commercial fonts (Source Han Serif SC,
             # Charter). Treat "primary missing, fallback present" as a warning
             # there so CI can still gate page-count regressions.
             print(f"  WARN: {name}: primary font ({primary}) not embedded; using fallback")

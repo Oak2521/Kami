@@ -259,7 +259,7 @@ def doctor_report() -> dict:
             "code and metadata labels",
         ),
         _probe_font(
-            "TsangerJinKai02", ("TsangerJinKai02-W04.ttf", "TsangerJinKai02-W05.ttf"),
+            "Source Han Serif SC", ("SourceHanSerifSC-Regular.otf", "SourceHanSerifSC-Medium.otf"),
             "primary Chinese editorial serif",
         ),
         _probe_font(

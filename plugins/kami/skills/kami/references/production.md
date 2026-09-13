@@ -40,15 +40,15 @@ python3 -c "from weasyprint import HTML; HTML('doc.html').write_pdf('out.pdf')"
 ```html
 <style>
 @font-face {
-  font-family: "TsangerJinKai02";
-  src: url("TsangerJinKai02-W04.ttf");
+  font-family: "Source Han Serif SC";
+  src: url("SourceHanSerifSC-Regular.otf");
   font-weight: 400 500;
 }
 body { font-family: Charter, Georgia, Palatino, serif; }
 </style>
 ```
 
-**No commercial font available**: fallback chains are embedded in every template.
+**OFL default and fallback**: fallback chains are embedded in every template.
 
 ```css
 /* English */
@@ -56,13 +56,13 @@ font-family: Charter, Georgia, Palatino,
              "Times New Roman", serif;
 
 /* Chinese */
-font-family: "TsangerJinKai02", "Source Han Serif SC",
+font-family: "Source Han Serif SC",
              "Noto Serif CJK SC", "Songti SC", Georgia, serif;
 
 /* Japanese */
 font-family: "YuMincho", "Yu Mincho", "Hiragino Mincho ProN",
              "Noto Serif CJK JP", "Source Han Serif JP",
-             "TsangerJinKai02", Georgia, serif;
+             "Source Han Serif SC", Georgia, serif;
 
 /* Korean */
 font-family: "Source Han Serif K", "Source Han Serif KR",
@@ -72,9 +72,9 @@ font-family: "Source Han Serif K", "Source Han Serif KR",
 
 **Font fallback affects page count**. Any font swap requires re-running the page-count check. If output overflows, first confirm the intended font actually loaded. If it did, edit content using pitfall "Hard-limit overflow"; spacing comes later and font size is the last resort.
 
-**Claude Desktop skill ZIPs do not bundle large CJK font files**: `TsangerJinKai02-W04.ttf`, `TsangerJinKai02-W05.ttf`, `SourceHanSerifKR-Regular.otf`, and `SourceHanSerifKR-Medium.otf` can make Claude.ai / Desktop skill upload or execution time out. The ZIP you upload must be the `scripts/package-skill.sh` output under the 6MB package ceiling, never a hand-zipped checkout. `package-skill.sh` excludes those large font files. Templates still keep local-first and jsDelivr fallback `@font-face` paths.
+**Claude Desktop skill ZIPs do not bundle large CJK font files**: `SourceHanSerifSC-Regular.otf`, `SourceHanSerifSC-Medium.otf`, `SourceHanSerifKR-Regular.otf`, and `SourceHanSerifKR-Medium.otf` can make Claude.ai / Desktop skill upload or execution time out. The ZIP you upload must be the `scripts/package-skill.sh` output under the 6MB package ceiling, never a hand-zipped checkout. `package-skill.sh` excludes those large font files. Templates still keep local-first and jsDelivr fallback `@font-face` paths.
 
-When Chinese or Korean fonts are missing (the skill case), `scripts/ensure-fonts.sh` downloads them to the XDG user font dir (`${XDG_DATA_HOME:-~/.local/share}/fonts/kami`, override with `KAMI_FONT_DIR`), **not** into the skill's `assets/fonts`. fontconfig scans that dir by default on macOS and Linux, so WeasyPrint resolves `TsangerJinKai02` and `Source Han Serif K` from there while the installed skill stays small; online renders still use the jsDelivr `@font-face` URL.
+When Chinese or Korean fonts are missing (the skill case), `scripts/ensure-fonts.sh` downloads them to the XDG user font dir (`${XDG_DATA_HOME:-~/.local/share}/fonts/kami`, override with `KAMI_FONT_DIR`), **not** into the skill's `assets/fonts`. fontconfig scans that dir by default on macOS and Linux, so WeasyPrint resolves `Source Han Serif SC` and `Source Han Serif K` from there while the installed skill stays small; online renders still use the jsDelivr `@font-face` URL.
 
 **Standalone HTML export** (sending a filled HTML file to someone else): this is not guaranteed to work outside the project tree. If the recipient cannot set up the font environment, use the PDF output instead.
 
@@ -82,8 +82,8 @@ If you do need to share HTML: the font file and the HTML must live in the same d
 
 ```css
 @font-face {
-  font-family: "TsangerJinKai02";
-  src: url("TsangerJinKai02-W04.ttf") format("truetype");
+  font-family: "Source Han Serif SC";
+  src: url("SourceHanSerifSC-Regular.otf") format("opentype");
 }
 ```
 
@@ -378,7 +378,7 @@ Use the `npx @marp-team/marp-cli@latest ...` form below for zero-install. For re
 
 Run from the repo root so input paths resolve. **Input file must come before `--theme-set`**; `--theme-set` is a yargs array option and will swallow any positional arg that follows it.
 
-**Font path caveat**: Marp inlines the theme CSS into the output HTML verbatim. The `@font-face` `url("../../fonts/...")` paths in the theme therefore resolve relative to the *output file location*, not the theme CSS location. When the output sits inside the repo (e.g. `-o assets/examples/kami.html`), the relative path matches and local Tsanger / Charter loads. When the output sits elsewhere (e.g. `-o /tmp/kami.html`), the relative path misses and the browser falls back to the jsDelivr CDN URL declared alongside each local one. This needs network. This differs from WeasyPrint, where CSS paths resolve relative to the input HTML.
+**Font path caveat**: Marp inlines the theme CSS into the output HTML verbatim. The `@font-face` `url("../../fonts/...")` paths in the theme therefore resolve relative to the *output file location*, not the theme CSS location. When the output sits inside the repo (e.g. `-o assets/examples/kami.html`), the relative path matches and local Source Han Serif SC / Charter loads. When the output sits elsewhere (e.g. `-o /tmp/kami.html`), the relative path misses and the browser falls back to the jsDelivr CDN URL declared alongside each local one. This needs network. This differs from WeasyPrint, where CSS paths resolve relative to the input HTML.
 
 ```bash
 # HTML preview (no Chromium needed; zero external download)
@@ -457,7 +457,7 @@ fine and looks cheap), and CJK text split across two families (per-glyph
 fontconfig fallback, which breaks single words down the middle). Prefer it over
 reading the font table by eye, and never sign off a CJK deliverable without it.
 
-If the output shows `DejaVuSerif` / `Bitstream Vera` - your specified font didn't load, fell through to system ultimate fallback. Expected: `Charter`, `Georgia`, `TsangerJinKai02`, or a Japanese Mincho face such as `YuMincho`, `Hiragino-Mincho`, `Noto-Serif-CJK-JP`, or `Source-Han-Serif-JP`.
+If the output shows `DejaVuSerif` / `Bitstream Vera` - your specified font didn't load, fell through to system ultimate fallback. Expected: `Charter`, `Georgia`, `Source Han Serif SC`, or a Japanese Mincho face such as `YuMincho`, `Hiragino-Mincho`, `Noto-Serif-CJK-JP`, or `Source-Han-Serif-JP`.
 
 ### One-step build + validate
 
@@ -610,7 +610,7 @@ Resume templates use section-title bottom rules and borderless project rows. Do 
 bash scripts/ensure-fonts.sh
 
 # Or put .ttf alongside the HTML
-cp TsangerJinKai02-W04.ttf workspace/
+cp SourceHanSerifSC-Regular.otf workspace/
 
 # macOS fallback font
 brew install --cask font-source-han-serif-sc
@@ -633,14 +633,14 @@ written after it never get their turn and each ideograph lands wherever
 fontconfig prefers (`Hiragino-Mincho` for some, `Songti-SC` for others).
 
 **Fix**: in SVG `text` rules, put the CJK families first and let Latin faces
-trail. `@font-face` fonts do resolve inside inline SVG, so `TsangerJinKai02`
+trail. `@font-face` fonts do resolve inside inline SVG, so `Source Han Serif SC`
 leading the stack draws both scripts from one family:
 
 ```css
 /* wrong: CJK after Latin, splits per glyph */
-text { font-family: Charter, Georgia, "TsangerJinKai02", "Songti SC", serif; }
+text { font-family: Charter, Georgia, "Source Han Serif SC", "Songti SC", serif; }
 /* right: one family draws the whole label */
-text { font-family: "TsangerJinKai02", "Source Han Serif SC", "Songti SC", Charter, Georgia, serif; }
+text { font-family: "Source Han Serif SC", "Songti SC", Charter, Georgia, serif; }
 ```
 
 `--check-fonts` catches this state; a page render at normal size usually does not.
@@ -997,3 +997,10 @@ The recipient gets a Word document they can edit text in and replace figures in 
 ### When not to ship a DOCX
 
 Skip this for resume, one-pager, slides, and portfolio. They are visual artifacts; converting them produces a degraded version with no editability gain. Long-doc / proposal / equity-report are the document types where a DOCX companion has a real audience.
+
+
+### User-authorized font override
+
+Chinese templates default to Adobe Source Han Serif SC (SIL OFL 1.1), with Noto/Source Han system fallbacks. The font recovery script and CDN paths use that OFL family; keep `assets/fonts/SourceHanSerif-LICENSE.txt` with redistributed fonts.
+
+TsangerJinKai02 is optional only when the user explicitly selects it and confirms an appropriate license for this task. Copy their licensed font to the task's asset directory and override that task's `@font-face` and `--serif`; do not change the installed default, download it automatically, or redistribute it in a skill package. Existing historical font files in the repository are not a commercial-use grant.

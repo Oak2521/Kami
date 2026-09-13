@@ -78,6 +78,7 @@ SKILL_MIRROR_ROOT = Path("plugins/kami/skills/kami")
 SKILL_MIRROR_ALLOWED_FONT_FILES = {
     "JetBrainsMono.woff2",
     "LICENSE-SourceHanSerifK.txt",
+    "SourceHanSerif-LICENSE.txt",
 }
 SKILL_MIRROR_IGNORED_DIRS = {
     "examples",
@@ -565,7 +566,7 @@ def check_generated(root: Path, generated_files: list[tuple[Path, str]], plugin_
     drift = False
 
     for generated_path, expected in generated_files:
-        actual = generated_path.read_text() if generated_path.exists() else ""
+        actual = generated_path.read_bytes().decode("utf-8") if generated_path.exists() else ""
         if actual != expected:
             rel = generated_path.relative_to(root).as_posix()
             print(
@@ -616,7 +617,7 @@ def check_generated(root: Path, generated_files: list[tuple[Path, str]], plugin_
 def write_generated(root: Path, generated_files: list[tuple[Path, str]], plugin_tree: dict[str, bytes]) -> int:
     for generated_path, expected in generated_files:
         generated_path.parent.mkdir(parents=True, exist_ok=True)
-        generated_path.write_text(expected)
+        generated_path.write_bytes(expected.encode("utf-8"))
         print(f"OK: wrote {generated_path.relative_to(root)} ({len(expected)} bytes)")
 
     codex_plugin_root = root / "plugins" / "kami"

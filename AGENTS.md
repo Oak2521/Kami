@@ -389,17 +389,9 @@ drift out of it:
   to fontconfig separately and splits words across two faces inside inline SVG
   (`production.md` pitfall #4.1). The `-en` templates are the deliberate exception:
   they are Latin documents, so `Charter` stays first there.
-- The commercial TsangerJinKai02 files never ship inside the skill package, so a
-  sandboxed install has no primary CJK serif and falls through the chain. Keep the
-  chain wide (Source Han Serif SC and CN, Noto Serif CJK SC and Noto Serif SC, Songti
-  SC, STSong, SimSun) so it lands on some serif rather than a system sans.
-- `bash scripts/ensure-fonts.sh` downloads into the XDG user font dir
-  (`${XDG_DATA_HOME:-~/.local/share}/fonts/kami`, override with `KAMI_FONT_DIR`),
-  never into the skill's `assets/fonts`, so an installed Claude Desktop skill stays
-  small. Inside a repo checkout it first restores missing or truncated font files from the root
-  `assets/fonts/` into the skill's ignored font directory. It downloads to the user
-  font directory only when usable fonts are still missing. Commercial use of TsangerJinKai02 requires
-  the appropriate license.
+- Chinese templates default to Source Han Serif SC (SIL OFL 1.1), with Noto and Source Han system fallbacks. The recovery script downloads this family from a fixed Adobe release and retains its license. Large OTFs remain outside the skill package.
+- TsangerJinKai02 may be chosen only for a task whose user explicitly selected it and has the appropriate license; use task-local font assets and CSS overrides. Never automatically fetch or activate it, including from historical root font files.
+- `bash skills/kami/scripts/ensure-fonts.sh` recovers OFL fonts into the configured `KAMI_FONT_DIR` or XDG user font directory; use a task-scoped directory for checks rather than altering the user's installed fonts.
 
 ## Releasing
 

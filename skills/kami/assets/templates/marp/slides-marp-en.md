@@ -31,7 +31,7 @@ footer: "Kami · Marp"
 
 - `--parchment` `#f5f4ed` warm cream canvas
 - `--brand` `#1B365D` the only chromatic accent
-- `--serif` Charter on English, Tsanger on Chinese
+- `--serif` Charter on English, Source Han Serif SC on Chinese
 - 280×158mm 16:9 page
 - `.eyebrow` `.lead` `.co` `.c2` `.t2x2` carry over
 
@@ -70,7 +70,7 @@ One ink-blue accent, never above 5% of surface area. Warm neutrals carry the res
 
 <div class="mt"><span class="ml">B</span>Type</div>
 
-One serif per page. Body 400, headings 500. No synthetic bold. Charter for EN, Tsanger W04 / W05 for CN.
+One serif per page. Body 400, headings 500. No synthetic bold. Charter for EN, Source Han Serif SC W04 / W05 for CN.
 
 </td>
 </tr>

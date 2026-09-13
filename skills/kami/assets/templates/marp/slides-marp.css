@@ -2,15 +2,15 @@
 /* Kami Marp theme (CJK). Mirrors slides-weasy.html tokens. */
 
 @font-face {
-  font-family: "TsangerJinKai02";
-  src: url("../../fonts/TsangerJinKai02-W04.ttf") format("truetype"),
-       url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+  font-family: "Source Han Serif SC";
+  src: url("../../fonts/SourceHanSerifSC-Regular.otf") format("opentype"),
+       url("https://cdn.jsdelivr.net/gh/adobe-fonts/source-han-serif@7889f11bf31170b5d092a083b357c8c8130f89e0/OTF/SimplifiedChinese/SourceHanSerifSC-Regular.otf") format("opentype");
   font-weight: 400;
 }
 @font-face {
-  font-family: "TsangerJinKai02";
-  src: url("../../fonts/TsangerJinKai02-W05.ttf") format("truetype"),
-       url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+  font-family: "Source Han Serif SC";
+  src: url("../../fonts/SourceHanSerifSC-Medium.otf") format("opentype"),
+       url("https://cdn.jsdelivr.net/gh/adobe-fonts/source-han-serif@7889f11bf31170b5d092a083b357c8c8130f89e0/OTF/SimplifiedChinese/SourceHanSerifSC-Medium.otf") format("opentype");
   font-weight: 500;
 }
 @font-face {
@@ -31,9 +31,9 @@
   --border:     #e8e6dc;
   --border-soft:#e5e3d8;
 
-  --serif: "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif K", "Source Han Serif KR", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif CJK KR", "Noto Serif SC", "Noto Serif KR", "Songti SC", "STSong", AppleMyungjo, Batang, "SimSun", Georgia, serif;
+  --serif: "Source Han Serif SC", "Source Han Serif K", "Source Han Serif KR", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif CJK KR", "Noto Serif SC", "Noto Serif KR", "Songti SC", "STSong", AppleMyungjo, Batang, "SimSun", Georgia, serif;
   --sans:  var(--serif);
-  --mono:  "JetBrains Mono", "SF Mono", "Fira Code", Consolas, Monaco, "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif K", "Source Han Serif KR", monospace;
+  --mono:  "JetBrains Mono", "SF Mono", "Fira Code", Consolas, Monaco, "Source Han Serif SC", "Source Han Serif K", "Source Han Serif KR", monospace;
 
   --rhythm-module:  14pt;
   --rhythm-section: 18pt;

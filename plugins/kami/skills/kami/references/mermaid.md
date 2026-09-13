@@ -35,7 +35,7 @@ beautiful-mermaid's seven color roles onto the Kami palette (`references/tokens.
 | `surface` | `--ivory` | `#faf9f5` |
 | `border` | `--border` | `#e8e6dc` |
 
-Font resolves to the Kami serif stack (`Charter ... TsangerJinKai02 ...`), so CJK
+Font resolves to the Kami serif stack (`Charter ... Source Han Serif SC ...`), so CJK
 labels render and embed correctly. Keep these hex values in sync with `tokens.json`.
 
 ## Most cases: edit a ready template

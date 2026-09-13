@@ -54,7 +54,7 @@ This system is a fusion of Anthropic's visual language and real Chinese / Englis
 ```css
 --near-black:  #141413;   /* Primary text - deepest but not pure black, warm olive undertone */
 --dark-warm:   #3d3d3a;   /* Secondary text, table headers, links */
---olive:       #504e49;   /* Subtext - descriptions, captions. zh-CN TsangerJinKai02 不需要 override. JA override: #4d4c48 (YuMincho thin strokes need darker text) */
+--olive:       #504e49;   /* Subtext - descriptions, captions. zh-CN Source Han Serif SC 不需要 override. JA override: #4d4c48 (YuMincho thin strokes need darker text) */
 --stone:       #6b6a64;   /* Tertiary - dates, metadata */
 ```
 
@@ -110,7 +110,7 @@ font-family: Charter, Georgia, Palatino,
              "Times New Roman", serif;
 
 /* Chinese */
-font-family: "TsangerJinKai02",
+font-family: "Source Han Serif SC",
              "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC",
              "Songti SC", "STSong",
              Georgia, serif;
@@ -119,13 +119,13 @@ font-family: "TsangerJinKai02",
 font-family: "YuMincho", "Yu Mincho",
              "Hiragino Mincho ProN",
              "Noto Serif CJK JP", "Source Han Serif JP",
-             "TsangerJinKai02",
+             "Source Han Serif SC",
              Georgia, serif;
 
 /* Mono, with CJK fallback for comments and labels */
 font-family: "JetBrains Mono", "SF Mono", "Fira Code",
              Consolas, Monaco,
-             "TsangerJinKai02", "Source Han Serif SC",
+             "Source Han Serif SC",
              monospace;
 ```
 
@@ -188,8 +188,8 @@ Print documents are **tighter** than English web body. English web typically run
 ### Letter-spacing
 
 - Body text: **0**
-- Chinese and Japanese body text with TsangerJinKai02: **0.3pt**, the baseline every shipped CN/JA template uses (`long-doc.html`, `one-pager.html`, `slides-weasy.html`); section titles and Mincho samples: **0**
-- Chinese lede text (14–22pt) with TsangerJinKai02: **0.03–0.06em** to open up large-body paragraphs without breaking density; EN and JA lede: **0** (only TsangerJinKai02 needs density compensation)
+- Chinese and Japanese body text with Source Han Serif SC: **0.3pt**, the baseline every shipped CN/JA template uses (`long-doc.html`, `one-pager.html`, `slides-weasy.html`); section titles and Mincho samples: **0**
+- Chinese lede text (14–22pt) with Source Han Serif SC: **0.03–0.06em** to open up large-body paragraphs without breaking density; EN and JA lede: **0** (only Source Han Serif SC needs density compensation)
 - Chinese and Japanese display text (24pt+): **0.2–1pt** optical spacing for visual breathing room at large sizes; scale with font size
 - English headings may use subtle optical tightening when needed; keep it localized, never inherited by body copy
 - Small labels (< 10pt): +0.2 to +0.5pt for readability
@@ -1419,7 +1419,7 @@ Before declaring any screen change done, screenshot the real rendered surface; a
 
 Korean templates use Source Han Serif K (Adobe, also distributed by Google
 as Noto Serif KR) as the primary serif. The font's hangul metrics are close
-enough to TsangerJinKai (CN) that the CN per-component values render
+enough to Source Han Serif SC (CN) that the CN per-component values render
 naturally in Korean without per-template re-tuning. The `one-pager-ko`
 pilot confirmed that the CN baseline values flow through cleanly: every
 numeric value below matches the CN one-pager (and the rest of the CN
@@ -1434,7 +1434,7 @@ Canonical values (verified during the `one-pager-ko` pilot, 2026-05-28):
 - Body `line-height`: 1.45 (matches CN baseline)
 - Body `letter-spacing`: 0.3pt (matches CN baseline)
 - H1 `font-size`: 24pt (matches CN baseline)
-- H1 `font-weight`: 500. CN templates use 500 (TsangerJinKai W05, a
+- H1 `font-weight`: 500. CN templates use 500 (Source Han Serif SC W05, a
   Medium-Bold) for every emphasis (body bold, headings, tags, metric
   values) and never reach for 700. Source Han Serif K exposes the full
   weight range (ExtraLight through Heavy), so KO bundles Regular (400) +

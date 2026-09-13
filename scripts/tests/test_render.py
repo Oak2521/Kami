@@ -46,14 +46,14 @@ def test_font_recovery_repairs_truncated_repository_copies() -> None:
         target = root / "skills/kami/assets/fonts"
         source.mkdir(parents=True)
         target.mkdir(parents=True)
-        names = {"TsangerJinKai02-W04.ttf": 10000000,
-                 "TsangerJinKai02-W05.ttf": 10000000,
+        names = {"SourceHanSerifSC-Regular.otf": 10000000,
+                 "SourceHanSerifSC-Medium.otf": 10000000,
                  "SourceHanSerifKR-Regular.otf": 6500000,
                  "SourceHanSerifKR-Medium.otf": 6500000}
         for name, size in names.items():
             with (source / name).open("wb") as f:
                 f.truncate(size)
-        broken = target / "TsangerJinKai02-W04.ttf"
+        broken = target / "SourceHanSerifSC-Regular.otf"
         broken.write_bytes(b"x")
         healthy = target / "SourceHanSerifKR-Regular.otf"
         shutil.copyfile(source / healthy.name, healthy)
@@ -116,13 +116,13 @@ def test_font_probe_rejects_empty_and_truncated_bundles() -> None:
 def test_font_family_key_collapses_weight_variants() -> None:
     """One family at two weights must not read as two typefaces.
 
-    Bold CJK body text is a separate BaseFont entry (TsangerJinKai02 plus
-    TsangerJinKai02-Medium, or the W04/W05 pair). Without collapsing, the
+    Bold CJK body text is a separate BaseFont entry (Source Han Serif SC plus
+    Source Han Serif SC-Medium, or the W04/W05 pair). Without collapsing, the
     mixed-family rule would fail every correctly rendered bilingual document.
     """
     pairs = [
-        ("TsangerJinKai02", "TsangerJinKai02-Medium"),
-        ("TsangerJinKai02-W04", "TsangerJinKai02-W05"),
+        ("Source Han Serif SC", "Source Han Serif SC-Medium"),
+        ("Source Han Serif SC-W04", "Source Han Serif SC-W05"),
         ("Source-Han-Serif-K", "Source-Han-Serif-K-Mediu"),
         ("NotoSerifCJKsc-Regular", "NotoSerifCJKsc-Bold"),
     ]
@@ -142,7 +142,7 @@ def test_classify_cjk_font_separates_serif_from_the_rest() -> None:
     classifier is what turns that into a failure.
     """
     cases = {
-        "ABCDEF+TsangerJinKai02-W04": "primary",
+        "ABCDEF+Source Han Serif SC-W04": "primary",
         "Songti-SC": "serif",
         "NotoSerifCJKsc-Regular": "serif",
         "Noto Serif CJK SC": "serif",
@@ -403,7 +403,7 @@ def test_verify_target_requires_exactly_two_resume_pages() -> None:
     original_render = verify_mod.render_pdf
     original_fonts = verify_mod._pdf_font_names
     try:
-        verify_mod._pdf_font_names = lambda _: {"ABCDEF+TsangerJinKai02-W04"}
+        verify_mod._pdf_font_names = lambda _: {"ABCDEF+Source Han Serif SC-W04"}
         results = {}
         for page_count in (1, 2, 3):
             verify_mod.render_pdf = lambda _src, _out, n=page_count: n

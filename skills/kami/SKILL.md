@@ -1,6 +1,6 @@
 ---
 name: kami
-description: 'Typeset professional documents and product landing pages: resumes, one-pagers, white papers, letters, portfolios, slide decks, landing pages. Templates use warm backgrounds, ink-blue accents, and serif fonts. CN uses TsangerJinKai02, EN uses Charter, JA uses YuMincho (best-effort). Triggers on "做 PDF / 排版 / 一页纸 / 白皮书 / 作品集 / 简历 / PPT / slides / Marp / markdown slides / マークダウンのスライド / 落地页 / 官网 / landing page / product page", or "build me a resume / make a one-pager / design a slide deck / turn this into a PDF / make this presentable / create a landing page".'
+description: 'Typeset professional documents and product landing pages: resumes, one-pagers, white papers, letters, portfolios, slide decks, landing pages. Templates use warm backgrounds, ink-blue accents, and serif fonts. CN uses Source Han Serif SC, EN uses Charter, JA uses YuMincho (best-effort). Triggers on "做 PDF / 排版 / 一页纸 / 白皮书 / 作品集 / 简历 / PPT / slides / Marp / markdown slides / マークダウンのスライド / 落地页 / 官网 / landing page / product page", or "build me a resume / make a one-pager / design a slide deck / turn this into a PDF / make this presentable / create a landing page".'
 ---
 
 # kami · 紙
@@ -437,7 +437,7 @@ python3 scripts/build.py --check            # lint + token/theme + public-site f
 
 > **Perceptual verify (PDF deliverables)**: geometry checks cannot see a fallback glyph or an arrow crossing a label. Before shipping a filled PDF, run `python3 scripts/build.py --check-visual path/to/filled.pdf`, then view every exported page image against the printed checklist. One hit means a whole-document sweep for that class of issue. If your host cannot view images, send the image paths and checklist to the user instead of skipping the pass. `--check-visual` runs the font gate for you and prints its verdict above the checklist.
 
-> **Font verify (CJK deliverables)**: a missing CJK serif produces no fallback boxes. It silently substitutes a sans that still reads, so the page passes an eyeball pass while carrying typography the parchment metrics were never tuned for, and the result reads heavy and flat without anything looking obviously broken. `--check-fonts` settles it from the rendered PDF's own span table: it names the family that drew the body ideographs and fails on a sans substitution or on text split across two families. Never report a CJK document as visually verified without it, and never assume a sandbox has the fonts: the commercial TsangerJinKai02 files never ship inside the skill package.
+> **Font verify (CJK deliverables)**: a missing CJK serif produces no fallback boxes. It silently substitutes a sans that still reads, so the page passes an eyeball pass while carrying typography the parchment metrics were never tuned for, and the result reads heavy and flat without anything looking obviously broken. `--check-fonts` settles it from the rendered PDF's own span table: it names the family that drew the body ideographs and fails on a sans substitution or on text split across two families. Never report a CJK document as visually verified without it, and never assume a sandbox has the fonts: the large OFL Source Han Serif SC files never ship inside the skill package.
 
 > **Fresh review**: after the mechanical and perceptual checks pass, review once from the artifact contract rather than from the builder's rationale. Read `brief`, the content-coverage result, and the rendered evidence; check every acceptance item and every `preserve` boundary; report P0/P1 findings with the page, viewport, or element that proves them. Use an isolated reviewer when the host supports one. Otherwise reload those three evidence surfaces and do a distinct second pass. Fix P0/P1 findings before handoff; do not let the same pass that made the artifact approve its own intentions.
 
@@ -461,7 +461,7 @@ A task is done when the user receives, in the closing message:
 
 When `--check-fonts` reports a sans substitution or a split family, or a render fails on a missing font: run `bash scripts/ensure-fonts.sh`, then read `references/production.md` Part 1 «Fonts» for the stacks, the fallback chains, and where the recovered files land. Waiting for visible fallback glyphs is not a strategy; the common failure has none.
 
-Two facts worth carrying here: the commercial TsangerJinKai02 files stay in the repo for local preview and CDN fallback but never go inside a Claude Desktop skill ZIP, and `Source Han Serif KR` is the real family name inside the OTFs, so it must stay in the KO chain for offline fontconfig to resolve it.
+Two facts worth carrying here: the large OFL Source Han Serif SC files stay in the repo for local preview and CDN fallback but never go inside a Claude Desktop skill ZIP, and `Source Han Serif KR` is the real family name inside the OTFs, so it must stay in the KO chain for offline fontconfig to resolve it.
 
 ## Feedback protocol
 
@@ -489,3 +489,5 @@ If no rendered evidence exists and the feedback still leaves two materially diff
 - Need saturated multi-color (this has one accent)
 - Need cartoon / animation / illustration style (this is editorial)
 - Web dynamic app UI (this is for print / static documents)
+
+Font authorization: the default Chinese font is Adobe Source Han Serif SC (SIL OFL 1.1). A user-selected commercial font needs an appropriate existing license and a task-local override; see references/production.md, User-authorized font override.

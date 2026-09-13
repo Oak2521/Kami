@@ -244,7 +244,7 @@ Page 2 has more space than page 1. Do not compress it to match page 1 density.
 | `.conv-body` line-height | 1.40 |
 | Page 2 top buffer | 4mm minimum between header and first section |
 
-This configuration fits 2 pages when TsangerJinKai02 is available. Font fallback to Source Han Serif adds roughly 0.3pt per line; run `--verify` after any font environment change.
+This configuration fits 2 pages when Source Han Serif SC is available. Font fallback to Source Han Serif adds roughly 0.3pt per line; run `--verify` after any font environment change.
 
 Do not scale page 2 font below 9pt to save space. If page 2 still overflows, cut one Convictions card or reduce Skills to 2 rows.
 

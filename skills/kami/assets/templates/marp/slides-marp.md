@@ -31,7 +31,7 @@ footer: "Kami · Marp"
 
 - `--parchment` `#f5f4ed` 暖纸底色
 - `--brand` `#1B365D` 单一墨蓝
-- `--serif` 中文 TsangerJinKai02 / 英文 Charter
+- `--serif` 中文 Source Han Serif SC / 英文 Charter
 - 280×158mm 16:9 页面
 - `.eyebrow` `.lead` `.co` `.c2` `.t2x2` 一致
 

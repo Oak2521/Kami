@@ -10,12 +10,12 @@ REPO_FONT_DIR="$SKILL_FONT_DIR"
 
 # Download target lives OUTSIDE the skill directory on purpose.
 #
-# Claude Desktop skill ZIPs exclude the large bundled fonts (TsangerJinKai TTFs,
+# Claude Desktop skill ZIPs exclude the large bundled fonts (Source Han Serif SC TTFs,
 # Source Han Serif K OTFs). The old code downloaded them back into the skill's
 # own assets/fonts, which pushed the installed skill past Claude Desktop's size
 # limit ("upload/execution too big"). We instead drop them in the XDG user font
 # dir, which fontconfig scans by default on both macOS (Homebrew) and Linux, yet
-# does NOT show up in macOS Font Book. WeasyPrint then resolves "TsangerJinKai02"
+# does NOT show up in macOS Font Book. WeasyPrint then resolves "Source Han Serif SC"
 # / "Source Han Serif K" from here when the template's relative @font-face path
 # is absent; online renders still fall back to the jsDelivr URL baked alongside
 # each @font-face declaration.
@@ -30,15 +30,15 @@ cleanup_tmp() {
 }
 trap cleanup_tmp EXIT
 
-MIN_SIZE_CN=10000000  # 10MB for TsangerJinKai (large CJK glyph set)
+MIN_SIZE_CN=20000000  # 10MB for Source Han Serif SC (large CJK glyph set)
 MIN_SIZE_KO=6500000   # 6.5MB for Source Han Serif K (Adobe full subset)
 
-# TsangerJinKai (CN): index N pairs CN_NAMES[N] with CN_LOCAL_NAMES[N].
-CN_NAMES=("仓耳今楷02-W04.ttf" "仓耳今楷02-W05.ttf")
-CN_LOCAL_NAMES=("TsangerJinKai02-W04.ttf" "TsangerJinKai02-W05.ttf")
+# Source Han Serif SC (CN): index N pairs CN_NAMES[N] with CN_LOCAL_NAMES[N].
+CN_NAMES=("SourceHanSerifSC-Regular.otf" "SourceHanSerifSC-Medium.otf")
+CN_LOCAL_NAMES=("SourceHanSerifSC-Regular.otf" "SourceHanSerifSC-Medium.otf")
 
 # Source Han Serif K (KO): mirror filenames match the repo filenames, so there
-# is no rename step (unlike Tsanger's Chinese-named official downloads).
+# is no rename step (unlike Source Han Serif SC's Chinese-named official downloads).
 KO_NAMES=("SourceHanSerifKR-Regular.otf" "SourceHanSerifKR-Medium.otf")
 
 # Mirror order is intentionally jsdmirror-first here, opposite of the
@@ -67,7 +67,7 @@ if [ -d "$SCRIPT_DIR/../../../assets/fonts" ]; then
   mkdir -p "$SKILL_FONT_DIR"
   for name in "${CN_LOCAL_NAMES[@]}" "${KO_NAMES[@]}"; do
     case "$name" in
-      Tsanger*) min_size="$MIN_SIZE_CN" ;;
+      SourceHanSerifSC*) min_size="$MIN_SIZE_CN" ;;
       *) min_size="$MIN_SIZE_KO" ;;
     esac
     target="$SKILL_FONT_DIR/$name"
@@ -106,44 +106,25 @@ refresh_fontconfig() {
   fi
 }
 
-download_tsanger() {
-  local cn_name="$1"
+download_cn_serif() {
   local local_name="$2"
   local target="$FONT_DIR/$local_name"
-
-  # Source 1: official tsanger.cn
-  local official_url="https://tsanger.cn/download/${cn_name}"
-  echo "  Trying: tsanger.cn (official)"
-  if curl --retry 2 --connect-timeout 15 --max-time 300 -fSL "$official_url" -o "$target.$TMP_SUFFIX" 2>/dev/null; then
-    if check_size "$target.$TMP_SUFFIX" "$MIN_SIZE_CN"; then
-      mv "$target.$TMP_SUFFIX" "$target"
-      echo "  OK: $local_name downloaded ($(du -h "$target" | cut -f1))"
-      return 0
-    else
-      rm -f "$target.$TMP_SUFFIX"
-    fi
-  else
-    rm -f "$target.$TMP_SUFFIX"
-  fi
-
-  # Source 2+: CDN mirrors (already named TsangerJinKai02-W0x.ttf)
-  for src in "${MIRROR_SOURCES[@]}"; do
-    local url="$src/$local_name"
-    echo "  Trying: $url"
-    if curl --retry 2 --connect-timeout 15 --max-time 300 -fSL "$url" -o "$target.$TMP_SUFFIX" 2>/dev/null; then
+  local src
+  # Adobe Source Han Serif 2.003, SIL OFL 1.1. Never download a commercial font.
+  for src in \
+    "https://raw.githubusercontent.com/adobe-fonts/source-han-serif/7889f11bf31170b5d092a083b357c8c8130f89e0/OTF/SimplifiedChinese" \
+    "https://cdn.jsdelivr.net/gh/adobe-fonts/source-han-serif@7889f11bf31170b5d092a083b357c8c8130f89e0/OTF/SimplifiedChinese"; do
+    if curl --retry 2 --connect-timeout 15 --max-time 300 -fSL "$src/$local_name" -o "$target.$TMP_SUFFIX" 2>/dev/null; then
       if check_size "$target.$TMP_SUFFIX" "$MIN_SIZE_CN"; then
         mv "$target.$TMP_SUFFIX" "$target"
-        echo "  OK: $local_name downloaded ($(du -h "$target" | cut -f1))"
+        cp "$SCRIPT_DIR/../assets/fonts/SourceHanSerif-LICENSE.txt" "$FONT_DIR/SourceHanSerif-LICENSE.txt"
+        echo "OK: $local_name downloaded (SIL OFL 1.1)"
         return 0
-      else
-        rm -f "$target.$TMP_SUFFIX"
       fi
-    else
-      rm -f "$target.$TMP_SUFFIX"
     fi
+    rm -f "$target.$TMP_SUFFIX"
   done
-
-  echo "  ERROR: all sources failed for $local_name"
+  echo "ERROR: could not download $local_name; install an OFL CJK serif or provide an authorized local font"
   return 1
 }
 
@@ -180,13 +161,13 @@ download_ko_serif() {
 
 cn_failed=0
 if cn_present_in "$REPO_FONT_DIR"; then
-  echo "OK: TsangerJinKai fonts present in repo checkout ($REPO_FONT_DIR)"
+  echo "OK: Source Han Serif SC fonts present in repo checkout ($REPO_FONT_DIR)"
 else
   mkdir -p "$FONT_DIR"
   if cn_present_in "$FONT_DIR"; then
-    echo "OK: TsangerJinKai fonts present ($FONT_DIR)"
+    echo "OK: Source Han Serif SC fonts present ($FONT_DIR)"
   else
-    echo "Downloading TsangerJinKai fonts to $FONT_DIR ..."
+    echo "Downloading Source Han Serif SC fonts to $FONT_DIR ..."
     for i in "${!CN_NAMES[@]}"; do
       cn_name="${CN_NAMES[$i]}"
       local_name="${CN_LOCAL_NAMES[$i]}"
@@ -194,15 +175,15 @@ else
         echo "  OK: $local_name already present"
         continue
       fi
-      if ! download_tsanger "$cn_name" "$local_name"; then
+      if ! download_cn_serif "$cn_name" "$local_name"; then
         cn_failed=$((cn_failed + 1))
       fi
     done
     if [[ "$cn_failed" -gt 0 ]]; then
       echo ""
-      echo "Some TsangerJinKai files could not be downloaded. Alternatives:"
+      echo "Some Source Han Serif SC files could not be downloaded. Alternatives:"
       echo "  1. Install Source Han Serif SC: brew install --cask font-source-han-serif-sc"
-      echo "  2. Copy TsangerJinKai02-W04.ttf and W05.ttf manually into $FONT_DIR"
+      echo "  2. Copy SourceHanSerifSC-Regular.otf and W05.ttf manually into $FONT_DIR"
       # Don't exit yet, try the KO recovery too so a Korean-only user still gets KO fonts.
     fi
   fi

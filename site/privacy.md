@@ -6,7 +6,7 @@ HTML version: <https://kami.tw93.fun/privacy>
 
 ## This site
 
-kami.tw93.fun is a static deploy of the public repository, hosted on Vercel. It sets no cookies, runs no analytics, and loads no third-party scripts, fonts, or images: every asset, including the JetBrains Mono and TsangerJinKai typefaces, is served from this domain. There is no tag manager or tracking pixel.
+kami.tw93.fun is a static deploy of the public repository, hosted on Vercel. It sets no cookies, runs no analytics, and loads no third-party scripts, fonts, or images: every asset, including the JetBrains Mono and Source Han Serif SC typefaces, is served from this domain. There is no tag manager or tracking pixel.
 
 One value is stored in your browser: `kami-lang`, written to `localStorage` when you pick a language from the switcher, so the site stops redirecting you away from your choice. It never leaves the browser, and clearing site data removes it.
 

@@ -540,8 +540,8 @@ def test_emphasis_container_mix_counts_distinct_fills() -> None:
 def test_chinese_slides_mono_has_cjk_fallback() -> None:
     """Slide labels may mix mono Latin and CJK; the mono stack needs CJK fallback."""
     text = (TEMPLATES / "slides-weasy.html").read_text(encoding="utf-8")
-    check("slides-weasy mono stack includes TsangerJinKai02 fallback",
-          '"TsangerJinKai02"' in text and '"Source Han Serif SC"' in text)
+    check("slides-weasy mono stack includes Source Han Serif SC fallback",
+          '"Source Han Serif SC"' in text and '"Source Han Serif SC"' in text)
 
 
 def test_scan_file_skip_bug() -> None:

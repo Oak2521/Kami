@@ -43,7 +43,7 @@ _THEME_FILE = _ROOT / "references" / "mermaid-theme.json"
 # Fallbacks if references/mermaid-theme.json is missing. Mirror that file and
 # references/design.md.
 _DEFAULT_FONT_STACK = (
-    'Charter, Georgia, "TsangerJinKai02", "Source Han Serif SC", '
+    'Charter, Georgia, "Source Han Serif SC", '
     '"Noto Serif CJK SC", serif'
 )
 _DEFAULT_COLORS = {

@@ -54,7 +54,7 @@ This system is a fusion of Anthropic's visual language and real Chinese / Englis
 ```css
 --near-black:  #141413;   /* Primary text - deepest but not pure black, warm olive undertone */
 --dark-warm:   #3d3d3a;   /* Secondary text, table headers, links */
---olive:       #504e49;   /* Subtext - descriptions, captions. zh-CN TsangerJinKai02 不需要 override. JA override: #4d4c48 (YuMincho thin strokes need darker text) */
+--olive:       #504e49;   /* Subtext - descriptions, captions. zh-CN Source Han Serif SC 不需要 override. JA override: #4d4c48 (YuMincho thin strokes need darker text) */
 --stone:       #6b6a64;   /* Tertiary - dates, metadata */
 ```
 
@@ -110,7 +110,7 @@ font-family: Charter, Georgia, Palatino,
              "Times New Roman", serif;
 
 /* Chinese */
-font-family: "TsangerJinKai02",
+font-family: "Source Han Serif SC",
              "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC",
              "Songti SC", "STSong",
              Georgia, serif;
@@ -119,13 +119,13 @@ font-family: "TsangerJinKai02",
 font-family: "YuMincho", "Yu Mincho",
              "Hiragino Mincho ProN",
              "Noto Serif CJK JP", "Source Han Serif JP",
-             "TsangerJinKai02",
+             "Source Han Serif SC",
              Georgia, serif;
 
 /* Mono, with CJK fallback for comments and labels */
 font-family: "JetBrains Mono", "SF Mono", "Fira Code",
              Consolas, Monaco,
-             "TsangerJinKai02", "Source Han Serif SC",
+             "Source Han Serif SC",
              monospace;
 ```
 
@@ -188,13 +188,33 @@ Print documents are **tighter** than English web body. English web typically run
 ### Letter-spacing
 
 - Body text: **0**
-- Chinese and Japanese body text with TsangerJinKai02: **0.3pt**, the baseline every shipped CN/JA template uses (`long-doc.html`, `one-pager.html`, `slides-weasy.html`); section titles and Mincho samples: **0**
-- Chinese lede text (14–22pt) with TsangerJinKai02: **0.03–0.06em** to open up large-body paragraphs without breaking density; EN and JA lede: **0** (only TsangerJinKai02 needs density compensation)
+- Chinese and Japanese body text with Source Han Serif SC: **0.3pt**, the baseline every shipped CN/JA template uses (`long-doc.html`, `one-pager.html`, `slides-weasy.html`); section titles and Mincho samples: **0**
+- Chinese lede text (14–22pt) with Source Han Serif SC: **0.03–0.06em** to open up large-body paragraphs without breaking density; EN and JA lede: **0** (only Source Han Serif SC needs density compensation)
 - Chinese and Japanese display text (24pt+): **0.2–1pt** optical spacing for visual breathing room at large sizes; scale with font size
 - English headings may use subtle optical tightening when needed; keep it localized, never inherited by body copy
 - Small labels (< 10pt): +0.2 to +0.5pt for readability
 - All-caps overlines: +0.5 to +1pt mandatory
 - **Slide-specific**: print tracking x0.5 at slide scale. Eyebrow max 3px (not 8px), display titles -0.5pt. Large type at 40pt+ will look scattered at print tracking values
+
+### External principles cross-check
+
+A cross-check against Pierrick Calvez, "A Five-Minute Guide to Better Typography" (external reference, read once for calibration, not reprinted here). Where the guide agrees with Kami it sharpens a rule already stated above; where it conflicts, the Kami invariant wins. Use this list to resist "improving" Kami toward habits that suit a Western multi-weight editorial page but break this constraint system.
+
+**Agrees with Kami (apply):**
+
+- **Set blocks, not glyphs.** Type is a beautiful group of letters, not a group of beautiful letters. Judge a paragraph as a shape and an even gray field, not one admirable character at a time. This is why Kami pins measure, line-height, and tracking per context rather than tuning individual words.
+- **Optical alignment beats mathematical alignment.** Text is aligned when it looks aligned, not when the box edges match. Nudge the optical edge back when a quotation mark, a bullet, a large display cap, or a hanging figure pushes a line visually past the margin. This is the same instinct behind the existing display-tracking and «cap both tracks» rules; it is a manual eyeball pass, not a token.
+- **Measure (line length) for reading body: about 40 to 70 characters per line.** Too wide and the eye loses the next line's start; too narrow and rhythm breaks. This is the character-count basis for the reading-measure caps already stated for screen prose (Section 11 «Documentation site», about 720px) and for the natural print measure held by the A4 margins in Section 3. Keep body reading inside this band; do not let a full-frame screen column run edge to edge.
+- **Line-spacing scales with measure and length.** Short blocks read fine near 1.2x the font size; long reading passages want roughly 1.5x. Map this onto Kami's locked tiers, do not invent your own: tight headlines 1.10-1.30, dense body 1.40-1.45, reading body 1.50-1.55. The guide's "1.5x" lands on Kami's reading tier; it is not a licence to reach 1.6+ on a print body (still forbidden above).
+- **Hierarchy comes from contrast, not ornament.** Separate levels with size, weight, and space, and when a step is unclear either skip a weight rather than adding a faint one, or open the size gap. Kami reaches the same end through its fixed ladder: use the next registered size step and the 500/400 weight pair, plus spacing, never a new in-between size (see «Ladder discipline») and never a decorative rule (see «Subtractive rule»).
+- **Left-align body; centre only short display lines.** Ragged-right left alignment gives the eye a stable return edge for running text. Centring is for a cover title, a short subtitle, or a single pinned callout line, never for paragraphs or lists. This matches the left-edge discipline in «Feature rows» and the centred-cover exceptions in the Deck Recipe.
+- **Kerning and tracking are optical tools for large and small type.** Spend them on display sizes and all-caps or small-caps labels, exactly where the Letter-spacing rules above already allow it. Do not track body copy for effect.
+
+**Conflicts with Kami (do not import):**
+
+- **Multi-weight typeface families.** The guide advises choosing a face with many weights (Light, Regular, Medium, Bold) and orchestrating them. Kami forbids this for the serif: body is 400, headings are 500, and that is the whole range. No 700 (synthetic bold is banned), no Light. Emphasis is carried by size, space, and ink-blue, per «Weight» and invariant 5. Do not add a weight step to a Kami serif document.
+- **Western ornamental punctuation habits.** Editorial guides written for English print lean on the em dash and decorative punctuation. Kami constrains dashes and decoration deliberately: see the no-em-dash rule in `AGENTS.md`, `references/anti-patterns.md` #28, and the list-marker rule in «Lists» (no faux en-dash bullets). Do not import em-dash-heavy phrasing or ornamental marks from the guide.
+- **Do not reprint the guide.** Keep this a distilled cross-check. Do not paste a full translation or a substantial verbatim excerpt of the source into the repo.
 
 ---
 
@@ -1399,7 +1419,7 @@ Before declaring any screen change done, screenshot the real rendered surface; a
 
 Korean templates use Source Han Serif K (Adobe, also distributed by Google
 as Noto Serif KR) as the primary serif. The font's hangul metrics are close
-enough to TsangerJinKai (CN) that the CN per-component values render
+enough to Source Han Serif SC (CN) that the CN per-component values render
 naturally in Korean without per-template re-tuning. The `one-pager-ko`
 pilot confirmed that the CN baseline values flow through cleanly: every
 numeric value below matches the CN one-pager (and the rest of the CN
@@ -1414,7 +1434,7 @@ Canonical values (verified during the `one-pager-ko` pilot, 2026-05-28):
 - Body `line-height`: 1.45 (matches CN baseline)
 - Body `letter-spacing`: 0.3pt (matches CN baseline)
 - H1 `font-size`: 24pt (matches CN baseline)
-- H1 `font-weight`: 500. CN templates use 500 (TsangerJinKai W05, a
+- H1 `font-weight`: 500. CN templates use 500 (Source Han Serif SC W05, a
   Medium-Bold) for every emphasis (body bold, headings, tags, metric
   values) and never reach for 700. Source Han Serif K exposes the full
   weight range (ExtraLight through Heavy), so KO bundles Regular (400) +
